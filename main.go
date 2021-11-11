@@ -2,17 +2,18 @@ package main
 
 import (
 	"fmt"
-	"github.com/edueo/romanNumerals"
 	"html"
 	"net/http"
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/edueo/romanNumerals"
 )
 
 func main() {
 	// Recebe uma requisição na raiz
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request){
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		// pega as partes da URL
 		urlPathElements := strings.Split(r.URL.Path, "/")
 
@@ -21,23 +22,23 @@ func main() {
 			if number == 0 || number > 10 {
 				w.WriteHeader(http.StatusNotFound)
 				w.Write([]byte("404 - Not Found"))
-			}else {
+			} else {
 				fmt.Fprintf(w, "%q", html.EscapeString(romanNumerals.Numerals[number]))
 			}
 
-		}else {
+		} else {
 			w.WriteHeader(http.StatusBadRequest)
 			w.Write([]byte("400 - Bad request"))
 		}
 	})
 
 	s := &http.Server{
-		Addr: ":8000".
-		ReadTimeout: 10 * time.Second,
-		WriteTimeout: 10 * time.Second,
+		Addr:           ":8000",
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
 		MaxHeaderBytes: 1 << 20,
 	}
 
-	s.ListenAndServer()
+	s.ListenAndServe()
 
 }
